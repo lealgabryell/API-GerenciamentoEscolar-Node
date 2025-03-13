@@ -11,7 +11,7 @@ const criarProfessor = async (req, res) => {
 
     await novoProfessor.save();
 
-    res.json({
+    res.status(201).json({
       message: "Professor criado com sucesso!",
       professor: novoProfessor,
     });
@@ -29,7 +29,7 @@ const obterTodosProfessores = async (req, res) => {
     if (professores.length === 0) {
       throw new Error("Nenhum professor encontrado");
     } else {
-      res.json(professores);
+      res.status(200).json(professores);
     }
   } catch (e) {
     res.status(404).json({
@@ -41,10 +41,10 @@ const obterTodosProfessores = async (req, res) => {
 
 const deletarProfessor = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params.id;
 
     await Professor.deleteOne({ _id: id });
-    res.json({ message: "Professor removido com sucesso!" });
+    res.status(201).json({ message: "Professor removido com sucesso!" });
   } catch (e) {
     res.status(404).json({
       message: "Erro ao deletar professor",
@@ -56,14 +56,14 @@ const deletarProfessor = async (req, res) => {
 const editarProfessor = async (req, res) => {
 
   try {
-    const { id } = req.params;
+    const { id } = req.params.id;
     const { nome, idade, disciplinasIds } = req.body;
     const professor = await Professor.findById(id);
     if (!professor) {
       throw new Error("Professor não encontrado");
     } else {
       let professorAtualizado = await Professor.findByIdAndUpdate(id, { nome, idade, disciplinas: disciplinasIds });
-      res.status(200).json({
+      res.status(201).json({
         message: "Professor atualizado com sucesso!",
         professor,
       });

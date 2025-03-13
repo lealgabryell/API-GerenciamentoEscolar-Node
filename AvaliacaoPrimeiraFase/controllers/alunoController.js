@@ -15,7 +15,7 @@ module.exports = {
 
         await novoAluno.save();
 
-        res.json({
+        res.status(201).json({
           message: "Aluno criado com sucesso!",
           aluno: novoAluno,
         });
@@ -35,7 +35,7 @@ module.exports = {
       if (!alunos) {
         throw new Error('Erro ao buscar alunos');
       } else {
-        res.json(alunos);
+        res.status(200).json(alunos);
       }
     } catch (e) {
       res.status(400).json({
@@ -47,13 +47,13 @@ module.exports = {
 
   deletarAluno: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params.id;
       const aluno = await Aluno.findById({ id });
       if (!id || !aluno) {
         throw new Error('Id invalido');
       } else {
         await Aluno.deleteOne({ _id: id });
-        res.json({ message: 'Aluno removido com sucesso!' });
+        res.status(201).json({ message: 'Aluno removido com sucesso!' });
       }
     } catch (e) {
       res.status(400).json({
@@ -64,7 +64,7 @@ module.exports = {
   },
   editarAluno: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params.id;
       const { nome, idade } = req.body;
 
       let aluno = await Aluno.findOne(id);
@@ -72,7 +72,7 @@ module.exports = {
         throw new Error('Aluno nao encontrado!');
       } else {
         const alunoAtualizado = await Aluno.findByIdAndUpdate(id, { nome, idade });
-        res.status(200).json({
+        res.status(201).json({
           message: 'Aluno atualizado com sucesso!',
           aluno: alunoAtualizado,
         });

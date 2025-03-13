@@ -1,42 +1,86 @@
-
+const Turma = require("../models/turma");
 
 const criarTurma = async (req, res) => {
-  const { nome, alunosIds, professorId } = req.body;
+  try {
+    const { nome, alunosIds, professorId } = req.body;
 
-  const novaTurma = new Turma({
-    nome,
-    alunos: alunosIds,
-    professor: professorId,
-  });
+    if (!nome || !alunosIds || alunosIds.length === 0 || !professorId) {
+      throw new Error("Campos obrigatórios não preenchidos");
+    } else {
+      const novaTurma = new Turma({
+        nome,
+        alunos: alunosIds,
+        professor: professorId,
+      });
 
-  await novaTurma.save();
+      await novaTurma.save();
 
-  res.json({
-    message: "Turma criada com sucesso!",
-    turma: novaTurma,
-  });
+      res.status(201).json({
+        message: "Turma criada com sucesso!",
+        turma: novaTurma,
+      });
+    }
+  } catch (e) {
+    res.status(400).json({ message: "Erro ao criar turma", error: e.message });
+  }
 };
 
 const obterTodasTurmas = async (req, res) => {
-  const turmas = await Turma.find().populate('alunos professor');
-  res.json(turmas);
+  try {
+    const turmas = await Turma.find().populate("alunos professor");
+    if (turmas.length === 0) {
+      throw new Error("Nenhuma turma encontrada");
+    } else {
+      res.status(200).json(turmas);
+    }
+  } catch (e) {
+    res
+      .status(404)
+      .json({ message: "Erro ao buscar turmas", error: e.message });
+  }
 };
 
 const deletarTurma = async (req, res) => {
-  const { id } = req.params;
-
-  await Turma.deleteOne({ _id: id });
-  res.json({ message: "Turma removida com sucesso!" });
+  try {
+    const { id } = req.params.id;
+    if (!id) {
+      throw new Error("Nenhum Id informado");
+    } else {
+      await Turma.deleteOne({ _id: id });
+      res.status(201).json({ message: "Turma removida com sucesso!" });
+    }
+  } catch (e) {
+    res
+      .status(404)
+      .json({ message: "Erro ao deletar turma", error: e.message });
+  }
 };
 
 const editarTurma = async (req, res) => {
-  const { id } = req.params;
-  const { nome, alunosIds, professorId } = req.body;
-
-  let turma = await Turma.findByIdAndUpdate(id, { nome, alunos: alunosIds, professor: professorId });
-  res.status(200).json({
-    message: "Turma atualizada com sucesso!",
-    turma,
-  });
+  try {
+    const { id } = req.params.id;
+    const { nome, alunosIds, professorId } = req.body;
+    const turma = await Turma.findById(id);
+    if (!id || !nome || !alunosIds || alunosIds.length === 0 || !professorId) {
+      throw new Error("Parametros obrigatórios não preenchidos");
+    } else if (!turma) {
+      throw new Error("Turma não encontrada");
+    } else {
+      let turmaAtualizada = await Turma.findByIdAndUpdate(id, {
+        nome,
+        alunos: alunosIds,
+        professor: professorId,
+      });
+      res.status(201).json({
+        message: "Turma atualizada com sucesso!",
+        turmaAtualizada,
+      });
+    }
+  } catch (e) {
+    res
+      .status(404)
+      .json({ message: "Erro ao atualizar turma", error: e.message });
+  }
 };
 
+module.exports = { criarTurma, obterTodasTurmas, deletarTurma, editarTurma };

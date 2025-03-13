@@ -1,43 +1,88 @@
+const Tarefa = require("../models/Tarefa");
 
 const criarTarefa = async (req, res) => {
-  const { titulo, alunoId, disciplinasIds } = req.body;
-  const concluida = false;
+  try {
+    const { titulo, alunoId, disciplinasIds } = req.body;
+    if (!titulo || !alunoId || !disciplinasIds || disciplinasIds.length === 0) {
+      throw new Error("Campos obrigatórios não preenchidos");
+    } else {
+      const concluida = false;
 
-  const novaTarefa = new Tarefa({
-    titulo,
-    aluno: alunoId,
-    concluida,
-    disciplinas: disciplinasIds,
-  });
+      const novaTarefa = new Tarefa({
+        titulo,
+        aluno: alunoId,
+        concluida,
+        disciplinas: disciplinasIds,
+      });
 
-  await novaTarefa.save();
+      await novaTarefa.save();
 
-  res.json({
-    message: "Tarefa criada com sucesso!",
-    tarefa: novaTarefa,
-  });
+      res.status(201).json({
+        message: "Tarefa criada com sucesso!",
+        tarefa: novaTarefa,
+      });
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Erro ao criar tarefa" });
+  }
 };
 
 const obterTodasTarefas = async (req, res) => {
-  const tarefas = await Tarefa.find().populate("aluno").populate("disciplinas");
-  res.json(tarefas);
+  try {
+    const tarefas = await Tarefa.find()
+      .populate("aluno")
+      .populate("disciplinas");
+    if (tarefas.length === 0) {
+      throw new Error("Nenhuma tarefa encontrada");
+    } else {
+      res.status(200).json(tarefas);
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Erro ao obter tarefa" });
+  }
 };
 
 const deletarTarefa = async (req, res) => {
-  const { id } = req.params;
-
-  await Tarefa.deleteOne({ _id: id });
-  res.json({ message: "Tarefa removida com sucesso!" });
+  try {
+    const { id } = req.params.id;
+    if (!id) {
+      throw new Error("Nenhum Id informado");
+    } else {
+      await Tarefa.deleteOne({ _id: id });
+      res.status(201).json({ message: "Tarefa removida com sucesso!" });
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Erro ao deletar tarefa" });
+  }
 };
 
 const editarTarefa = async (req, res) => {
-  const { id } = req.params;
-  const { titulo, concluida } = req.body;
-
-  let tarefa = await Tarefa.findByIdAndUpdate(id, { titulo, concluida });
-  res.status(200).json({
-    message: "Tarefa atualizada com sucesso!",
-    tarefa,
-  });
+  try {
+    const { id } = req.params.id;
+    const { titulo, concluida } = req.body;
+    const tarefa = await Tarefa.findById(id);
+    if (!id || !titulo || !concluida) {
+      throw new Error("Campos obrigatórios não preenchidos");
+    } else if (!tarefa) {
+      throw new Error("Tarefa não encontrada");
+    } else {
+      let tarefaAtualizada = await Tarefa.findByIdAndUpdate(id, {
+        titulo,
+        concluida,
+      });
+      res.status(201).json({
+        message: "Tarefa atualizada com sucesso!",
+        tarefaAtualizada,
+      });
+    }
+  } catch (e) {
+    res.status(500).json({ message: "Erro ao editar tarefa" });
+  }
 };
 
+module.exports = {
+  criarTarefa,
+  obterTodasTarefas,
+  deletarTarefa,
+  editarTarefa,
+};

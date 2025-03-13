@@ -21,63 +21,68 @@ module.exports = {
         { $push: { disciplinas: novaDisciplina._id } }
       );
 
-      res.json({
+      res.status(201).json({
         message: "Disciplina criada com sucesso!",
         disciplina: novaDisciplina,
       });
     } catch (e) {
       res.status(400).json({
         message: "Erro ao criar disciplina",
-        error: e.message
+        error: e.message,
       });
     }
-
   },
 
   obterTodasDisciplinas: async (req, res) => {
     try {
-      const disciplinas = await Disciplina.find().populate('tarefas');
+      const disciplinas = await Disciplina.find().populate("tarefas");
       if (disciplinas.length === 0) {
         throw new Error("Nenhuma disciplina encontrada");
       } else {
-        res.json(disciplinas);
+        res.status(200).json(disciplinas);
       }
     } catch (e) {
       res.status(404).json({
         message: "Erro ao buscar disciplinas",
-        error: e.message
+        error: e.message,
       });
     }
   },
 
   deletarDisciplina: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params.id;
       const disciplina = await Disciplina.findById(id);
       if (!disciplina) {
         throw new Error("Disciplina não encontrada");
       } else {
         await Disciplina.deleteOne({ _id: id });
-        res.json({ message: "Disciplina removida com sucesso!" });
+        res.status(201).json({ message: "Disciplina removida com sucesso!" });
       }
     } catch (e) {
       res.status(404).json({
         message: "Erro ao deletar disciplina",
-        error: e.message
+        error: e.message,
       });
     }
   },
 
   editarDisciplina: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params.id;
       const { nome, descricao, dataInicio, dataFim, tarefasIds } = req.body;
       const disciplina = await Disciplina.findById(id);
       if (!disciplina) {
         throw new Error("Disciplina não encontrada");
       } else {
-        let disciplinaAtualizada = await Disciplina.findByIdAndUpdate(id, { nome, descricao, dataInicio, dataFim, tarefas: tarefasIds });
-        res.status(200).json({
+        let disciplinaAtualizada = await Disciplina.findByIdAndUpdate(id, {
+          nome,
+          descricao,
+          dataInicio,
+          dataFim,
+          tarefas: tarefasIds,
+        });
+        res.status(201).json({
           message: "Disciplina atualizada com sucesso!",
           atualizacao: disciplinaAtualizada,
         });
@@ -85,9 +90,8 @@ module.exports = {
     } catch (e) {
       res.status(404).json({
         message: "Erro ao atualizar disciplina",
-        error: e.message
+        error: e.message,
       });
     }
-  }
-}
-
+  },
+};

@@ -20,58 +20,67 @@ module.exports = {
         { $set: { perfil: novoPerfil._id } }
       );
 
-      res.json({
+      res.status(201).json({
         message: "Perfil criado com sucesso!",
         perfil: novoPerfil,
       });
     } catch (e) {
       res.status(400).json({
         message: "Erro ao criar perfil",
-        error: e.message
+        error: e.message,
       });
     }
   },
 
   obterTodosPerfis: async (req, res) => {
     try {
-      const perfis = await Perfil.find().populate('aluno');
-      res.json(perfis);
+      const perfis = await Perfil.find().populate("aluno");
+      if (perfis.length === 0) {
+        throw new Error("Nenhum perfil encontrado");
+      } else {
+        res.status(200).json(perfis);
+      }
     } catch (e) {
       res.status(404).json({
         message: "Erro ao buscar perfis",
-        error: e.message
+        error: e.message,
       });
     }
   },
 
   deletarPerfil: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params.id;
       const perfil = await Perfil.findById(id);
       if (!perfil) {
         throw new Error("Perfil não encontrado");
       } else {
         await Perfil.deleteOne({ _id: id });
-        res.json({ message: "Perfil removido com sucesso!" });
+        res.status(201).json({ message: "Perfil removido com sucesso!" });
       }
     } catch (e) {
       res.status(404).json({
         message: "Erro ao deletar perfil",
-        error: e.message
+        error: e.message,
       });
     }
   },
 
   editarPerfil: async (req, res) => {
     try {
-      const { id } = req.params;
+      const { id } = req.params.id;
       const { matricula, telefone, endereco, alunoId } = req.body;
       const perfil = await Perfil.findById(id);
       if (!perfil) {
         throw new Error("Perfil não encontrado");
       } else {
-        let perfilAtualizado = await Perfil.findByIdAndUpdate(id, { matricula, telefone, endereco, aluno: alunoId });
-        res.status(200).json({
+        let perfilAtualizado = await Perfil.findByIdAndUpdate(id, {
+          matricula,
+          telefone,
+          endereco,
+          aluno: alunoId,
+        });
+        res.status(201).json({
           message: "Perfil atualizado com sucesso!",
           perfil: perfilAtualizado,
         });
@@ -79,8 +88,8 @@ module.exports = {
     } catch (e) {
       res.status(404).json({
         message: "Erro ao editar perfil",
-        error: e.message
+        error: e.message,
       });
     }
-  }
+  },
 };
