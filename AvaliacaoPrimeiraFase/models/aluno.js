@@ -7,3 +7,9 @@ let alunoSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("Aluno", alunoSchema);
+
+
+//1 pra 1: referencia nas duas pontas sem array
+//muitos pra muitos: tem referencia nas duas pontas com array
+//muitos pra 1: tem referencia no lado muitos e nao com array
+//1 pra muitos: tem referencia no lado 1 e com array

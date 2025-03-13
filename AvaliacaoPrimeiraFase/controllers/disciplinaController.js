@@ -1,49 +1,93 @@
+const Disciplina = require("../models/disciplina");
 
-const criarDisciplina = async (req, res) => {
-  const { nome, descricao, dataInicio, dataFim, tarefasIds } = req.body;
+module.exports = {
+  criarDisciplina: async (req, res) => {
+    try {
+      const { nome, descricao, dataInicio, dataFim, tarefasIds } = req.body;
 
-  const novaDisciplina = new Disciplina({
-    nome,
-    descricao,
-    dataInicio,
-    dataFim,
-    tarefas: tarefasIds,
-  });
+      const novaDisciplina = new Disciplina({
+        nome,
+        descricao,
+        dataInicio,
+        dataFim,
+        tarefas: tarefasIds,
+      });
 
-  await novaDisciplina.save();
+      await novaDisciplina.save();
 
-  // Atualiza as tarefas associadas à disciplina
-  await Tarefa.updateMany(
-    { _id: { $in: tarefasIds } },
-    { $push: { disciplinas: novaDisciplina._id } }
-  );
+      // Atualiza as tarefas associadas à disciplina
+      await Tarefa.updateMany(
+        { _id: { $in: tarefasIds } },
+        { $push: { disciplinas: novaDisciplina._id } }
+      );
 
-  res.json({
-    message: "Disciplina criada com sucesso!",
-    disciplina: novaDisciplina,
-  });
-};
+      res.json({
+        message: "Disciplina criada com sucesso!",
+        disciplina: novaDisciplina,
+      });
+    } catch (e) {
+      res.status(400).json({
+        message: "Erro ao criar disciplina",
+        error: e.message
+      });
+    }
 
-const obterTodasDisciplinas = async (req, res) => {
-  const disciplinas = await Disciplina.find().populate('tarefas');
-  res.json(disciplinas);
-};
+  },
 
-const deletarDisciplina = async (req, res) => {
-  const { id } = req.params;
+  obterTodasDisciplinas: async (req, res) => {
+    try {
+      const disciplinas = await Disciplina.find().populate('tarefas');
+      if (disciplinas.length === 0) {
+        throw new Error("Nenhuma disciplina encontrada");
+      } else {
+        res.json(disciplinas);
+      }
+    } catch (e) {
+      res.status(404).json({
+        message: "Erro ao buscar disciplinas",
+        error: e.message
+      });
+    }
+  },
 
-  await Disciplina.deleteOne({ _id: id });
-  res.json({ message: "Disciplina removida com sucesso!" });
-};
+  deletarDisciplina: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const disciplina = await Disciplina.findById(id);
+      if (!disciplina) {
+        throw new Error("Disciplina não encontrada");
+      } else {
+        await Disciplina.deleteOne({ _id: id });
+        res.json({ message: "Disciplina removida com sucesso!" });
+      }
+    } catch (e) {
+      res.status(404).json({
+        message: "Erro ao deletar disciplina",
+        error: e.message
+      });
+    }
+  },
 
-const editarDisciplina = async (req, res) => {
-  const { id } = req.params;
-  const { nome, descricao, dataInicio, dataFim, tarefasIds } = req.body;
-
-  let disciplina = await Disciplina.findByIdAndUpdate(id, { nome, descricao, dataInicio, dataFim, tarefas: tarefasIds });
-  res.status(200).json({
-    message: "Disciplina atualizada com sucesso!",
-    disciplina,
-  });
-};
+  editarDisciplina: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { nome, descricao, dataInicio, dataFim, tarefasIds } = req.body;
+      const disciplina = await Disciplina.findById(id);
+      if (!disciplina) {
+        throw new Error("Disciplina não encontrada");
+      } else {
+        let disciplinaAtualizada = await Disciplina.findByIdAndUpdate(id, { nome, descricao, dataInicio, dataFim, tarefas: tarefasIds });
+        res.status(200).json({
+          message: "Disciplina atualizada com sucesso!",
+          atualizacao: disciplinaAtualizada,
+        });
+      }
+    } catch (e) {
+      res.status(404).json({
+        message: "Erro ao atualizar disciplina",
+        error: e.message
+      });
+    }
+  }
+}
 
