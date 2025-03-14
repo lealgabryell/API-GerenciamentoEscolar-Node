@@ -18,7 +18,7 @@ Me encontre no **LinkedIn:**<br>
 <a href="https://www.linkedin.com/in/gabryell-leal-rocha-1762392a0"><img src="https://img.shields.io/badge/LinkedIn-blue?style=for-the-badge&logo=linkedin" width="100"></a>
 
 ## ✨ Funcionalidades
-- **Cadastro e autenticação de alunos, professores, perffis, turmas, disciplinas e tarefas** 
+- **Cadastro e autenticação de alunos, professores, perfis, turmas, disciplinas e tarefas** 
 - **Apenas professores autenticados pode operar turmas, disciplinas e tarefas** (JWT)
 - **Criptografia de senhas** com Bcrypt
 - CRUD de recursos protegidos por token
