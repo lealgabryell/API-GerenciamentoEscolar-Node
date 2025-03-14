@@ -7,7 +7,7 @@ Todo o passo a passo de criação e desenvolvimento desse projeto se encontra ne
 
 ## ✍🏻 Autor
 
-<a><img src="https://gitlab.com/uploads/-/system/user/avatar/23003426/avatar.png" width="200"></a><br><br>
+<a><img src="https://github.com/user-attachments/assets/fa60aba8-3200-402d-8b9e-a004ed3de6cf" width="200px"></a><br><br>
 
 Olá, Sou **Gabryell Leal** <br>
 
