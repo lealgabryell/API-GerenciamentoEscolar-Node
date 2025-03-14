@@ -1,4 +1,4 @@
-const Aluno = require('../models/aluno');
+const Aluno = require("../models/aluno");
 
 module.exports = {
   criarAluno: async (req, res) => {
@@ -8,12 +8,12 @@ module.exports = {
       if (!nome || !idade) {
         throw new Error("Nome e idade são obrigatórios");
       } else {
-        const novoAluno = new Aluno({
+        const novoAluno = {
           nome,
           idade,
-        });
+        };
 
-        await novoAluno.save();
+        await Aluno.create(novoAluno);
 
         res.status(201).json({
           message: "Aluno criado com sucesso!",
@@ -26,62 +26,62 @@ module.exports = {
         error: e.message,
       });
     }
-
   },
-
   obterTodosAlunos: async (req, res) => {
     try {
-      const alunos = await Aluno.find().populate('perfil');
+      const alunos = await Aluno.find().populate("perfil");
       if (!alunos) {
-        throw new Error('Erro ao buscar alunos');
+        throw new Error("Erro ao buscar alunos");
       } else {
         res.status(200).json(alunos);
       }
     } catch (e) {
       res.status(400).json({
-        message: 'Erro ao buscar alunos',
+        message: "Erro ao buscar alunos",
         error: e.message,
       });
     }
   },
-
   deletarAluno: async (req, res) => {
     try {
-      const { id } = req.params.id;
-      const aluno = await Aluno.findById({ id });
-      if (!id || !aluno) {
-        throw new Error('Id invalido');
+      const id = req.params.id;
+      const aluno = await Aluno.findById(id);
+      if (!aluno) {
+        throw new Error("Id invalido");
       } else {
-        await Aluno.deleteOne({ _id: id });
-        res.status(201).json({ message: 'Aluno removido com sucesso!' });
+        await Aluno.findByIdAndDelete(aluno);
+        res.status(201).json({ message: "Aluno removido com sucesso!" });
       }
     } catch (e) {
       res.status(400).json({
-        message: 'Erro ao deletar aluno',
+        message: "Erro ao deletar aluno",
         error: e.message,
       });
     }
   },
   editarAluno: async (req, res) => {
     try {
-      const { id } = req.params.id;
+      const id = req.params.id;
       const { nome, idade } = req.body;
 
-      let aluno = await Aluno.findOne(id);
+      let aluno = await Aluno.findById(id);
       if (!aluno) {
-        throw new Error('Aluno nao encontrado!');
+        throw new Error("Aluno nao encontrado!");
       } else {
-        const alunoAtualizado = await Aluno.findByIdAndUpdate(id, { nome, idade });
+        await Aluno.findByIdAndUpdate(id, {
+          nome,
+          idade,
+        });
         res.status(201).json({
-          message: 'Aluno atualizado com sucesso!',
-          aluno: alunoAtualizado,
+          message: "Aluno atualizado com sucesso!",
+          aluno: { nome, idade },
         });
       }
     } catch (e) {
       res.status(400).json({
-        message: 'Erro ao atualizar aluno',
+        message: "Erro ao atualizar aluno",
         error: e.message,
       });
     }
-  }
-}
+  },
+};

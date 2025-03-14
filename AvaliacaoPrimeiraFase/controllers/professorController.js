@@ -1,12 +1,14 @@
 const Professor = require("../models/Professor");
 const criarProfessor = async (req, res) => {
   try {
-    const { nome, idade, disciplinasIds } = req.body;
+    const { nome, idade, email, senha, disciplinasIds } = req.body;
 
     const novoProfessor = new Professor({
       nome,
       idade,
-      disciplinas: disciplinasIds
+      email,
+      senha,
+      disciplinas: disciplinasIds,
     });
 
     await novoProfessor.save();
@@ -18,14 +20,14 @@ const criarProfessor = async (req, res) => {
   } catch (e) {
     res.status(400).json({
       message: "Erro ao criar professor",
-      error: e.message
+      error: e.message,
     });
   }
 };
 
 const obterTodosProfessores = async (req, res) => {
   try {
-    const professores = await Professor.find().populate('disciplinas');
+    const professores = await Professor.find().populate("disciplinas");
     if (professores.length === 0) {
       throw new Error("Nenhum professor encontrado");
     } else {
@@ -34,7 +36,7 @@ const obterTodosProfessores = async (req, res) => {
   } catch (e) {
     res.status(404).json({
       message: "Erro ao buscar professores",
-      error: e.message
+      error: e.message,
     });
   }
 };
@@ -48,13 +50,12 @@ const deletarProfessor = async (req, res) => {
   } catch (e) {
     res.status(404).json({
       message: "Erro ao deletar professor",
-      error: e.message
+      error: e.message,
     });
   }
 };
 
 const editarProfessor = async (req, res) => {
-
   try {
     const { id } = req.params.id;
     const { nome, idade, disciplinasIds } = req.body;
@@ -62,7 +63,11 @@ const editarProfessor = async (req, res) => {
     if (!professor) {
       throw new Error("Professor não encontrado");
     } else {
-      let professorAtualizado = await Professor.findByIdAndUpdate(id, { nome, idade, disciplinas: disciplinasIds });
+      let professorAtualizado = await Professor.findByIdAndUpdate(id, {
+        nome,
+        idade,
+        disciplinas: disciplinasIds,
+      });
       res.status(201).json({
         message: "Professor atualizado com sucesso!",
         professor,
@@ -71,8 +76,16 @@ const editarProfessor = async (req, res) => {
   } catch (e) {
     res.status(404).json({
       message: "Erro ao atualizar professor",
-      error: e.message
+      error: e.message,
     });
   }
 };
-module.exports = { criarProfessor, obterTodosProfessores, deletarProfessor, editarProfessor };
+
+const login = async (req, res) => {};
+module.exports = {
+  criarProfessor,
+  obterTodosProfessores,
+  deletarProfessor,
+  editarProfessor,
+  login,
+};
