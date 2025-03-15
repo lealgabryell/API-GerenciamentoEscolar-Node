@@ -91,9 +91,6 @@ Deixa uma estrela no repositório! Depois disso:
 4. Push para a branch (`git push origin feature/nova-funcionalidade`)
 5. Abra um Pull Request
 
-## 📄 Licença
-Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
-
 ---
 
 **Feito por _[Gabryell Leal Rocha]_** 
