@@ -1,4 +1,5 @@
 const Disciplina = require("../models/disciplina");
+const Tarefa = require("../models/tarefa");
 
 module.exports = {
   criarDisciplina: async (req, res) => {
@@ -51,7 +52,7 @@ module.exports = {
 
   deletarDisciplina: async (req, res) => {
     try {
-      const { id } = req.params.id;
+      const id = req.params.id;
       const disciplina = await Disciplina.findById(id);
       if (!disciplina) {
         throw new Error("Disciplina não encontrada");
@@ -69,7 +70,7 @@ module.exports = {
 
   editarDisciplina: async (req, res) => {
     try {
-      const { id } = req.params.id;
+      const id = req.params.id;
       const { nome, descricao, dataInicio, dataFim, tarefasIds } = req.body;
       const disciplina = await Disciplina.findById(id);
       if (!disciplina) {

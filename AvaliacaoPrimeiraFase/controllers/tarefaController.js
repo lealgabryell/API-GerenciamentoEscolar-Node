@@ -38,7 +38,11 @@ const obterTodasTarefas = async (req, res) => {
       res.status(200).json(tarefas);
     }
   } catch (e) {
-    res.status(500).json({ message: "Erro ao obter tarefa" });
+    if (e.message == "Nenhuma tarefa encontrada") {
+      res.status(200).json({ message: e.message });
+    } else {
+      res.status(500).json({ message: "Erro ao obter tarefa" });
+    }
   }
 };
 
@@ -58,7 +62,7 @@ const deletarTarefa = async (req, res) => {
 
 const editarTarefa = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     const { titulo, concluida } = req.body;
     const tarefa = await Tarefa.findById(id);
     if (!id || !titulo || !concluida) {

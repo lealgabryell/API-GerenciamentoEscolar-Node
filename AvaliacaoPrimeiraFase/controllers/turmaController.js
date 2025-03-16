@@ -58,7 +58,7 @@ const deletarTurma = async (req, res) => {
 
 const editarTurma = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     const { nome, alunosIds, professorId } = req.body;
     const turma = await Turma.findById(id);
     if (!id || !nome || !alunosIds || alunosIds.length === 0 || !professorId) {

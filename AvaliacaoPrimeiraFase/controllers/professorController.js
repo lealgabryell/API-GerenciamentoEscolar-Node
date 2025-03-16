@@ -66,7 +66,7 @@ const deletarProfessor = async (req, res) => {
 
 const editarProfessor = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     const { nome, idade, email, disciplinasIds } = req.body;
     const professor = await Professor.findById(id);
     if (!professor) {

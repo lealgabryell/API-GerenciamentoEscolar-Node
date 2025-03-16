@@ -1,11 +1,16 @@
 const Aluno = require("../models/aluno");
 const Perfil = require("../models/perfil");
+const { v4: uuidv4 } = require("uuid");
+
+const genearetMatricula = () => {
+  return `m-${uuidv4()}`;
+};
 
 module.exports = {
   criarPerfil: async (req, res) => {
     try {
-      const { matricula, telefone, endereco, alunoId } = req.body;
-
+      const { telefone, endereco, alunoId } = req.body;
+      const matricula = genearetMatricula();
       const novoPerfil = new Perfil({
         matricula,
         telefone,
@@ -50,7 +55,7 @@ module.exports = {
 
   deletarPerfil: async (req, res) => {
     try {
-      const { id } = req.params.id;
+      const id = req.params.id;
       const perfil = await Perfil.findById(id);
       if (!perfil) {
         throw new Error("Perfil não encontrado");

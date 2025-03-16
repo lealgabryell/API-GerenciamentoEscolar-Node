@@ -1,4 +1,5 @@
 const Aluno = require("../models/aluno");
+const perfil = require("../models/perfil");
 
 module.exports = {
   criarAluno: async (req, res) => {
@@ -30,10 +31,24 @@ module.exports = {
   obterTodosAlunos: async (req, res) => {
     try {
       const alunos = await Aluno.find().populate("perfil");
+
       if (!alunos) {
         throw new Error("Erro ao buscar alunos");
       } else {
-        res.status(200).json(alunos);
+        res.status(200).json({
+          alunosEncontrados: alunos.map(({ _id, nome, idade, perfil }) => ({
+            _id,
+            nome,
+            idade,
+            perfil: perfil
+              ? {
+                  matricula: perfil.matricula,
+                  telefone: perfil.telefone,
+                  endereco: perfil.endereco,
+                }
+              : "Aluno sem perfil",
+          })),
+        });
       }
     } catch (e) {
       res.status(400).json({
