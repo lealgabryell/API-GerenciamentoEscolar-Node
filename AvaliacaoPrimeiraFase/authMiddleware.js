@@ -3,18 +3,19 @@ const jwtService = require("jsonwebtoken");
 module.exports = (req, res, next) => {
   const path = req.path;
   const method = req.method;
-  const nonSecurePaths = ["/api/professor/login", "/api/aluno/", "/api/perfil/"];
-  let token = req.headers.autorization;
+  const nonSecurePaths = ["/api/professor", "/api/aluno", "/api/perfil"];
+  let token = req.headers.authorization;
 
   if (
-    (path.includes(nonSecurePaths) && method == "POST") ||
-    method == "PUT" ||
-    method == "DELETE" || method == "GET"
+    (nonSecurePaths.includes(path) && method == "POST") ||
+    (nonSecurePaths.includes(path) && method == "GET") ||
+    (nonSecurePaths.includes(path) && method == "PUT") ||
+    (nonSecurePaths.includes(path) && method == "DELETE") ||
+    (path.includes("/api/tarefa") && method == "GET") ||
+    (path.includes("/api/professor/login") && method == "POST")
   ) {
     return next();
-  }
-
-  if (!token) {
+  } else if (!token) {
     res.status(401).json({ message: "Token não informado" });
   } else {
     token = token.split(" ")[1];

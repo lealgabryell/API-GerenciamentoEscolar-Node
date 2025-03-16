@@ -1,4 +1,8 @@
 const Professor = require("../models/Professor");
+const bcrypt = require("bcrypt");
+require("dotenv").config();
+const jwtService = require("jsonwebtoken");
+
 const criarProfessor = async (req, res) => {
   try {
     const { nome, idade, email, senha, disciplinasIds } = req.body;
@@ -10,6 +14,11 @@ const criarProfessor = async (req, res) => {
       senha,
       disciplinas: disciplinasIds,
     });
+
+    novoProfessor.senha = await bcrypt.hash(
+      novoProfessor.senha,
+      Number(process.env.ROUNDS)
+    );
 
     await novoProfessor.save();
 
@@ -58,7 +67,7 @@ const deletarProfessor = async (req, res) => {
 const editarProfessor = async (req, res) => {
   try {
     const { id } = req.params.id;
-    const { nome, idade, disciplinasIds } = req.body;
+    const { nome, idade, email, disciplinasIds } = req.body;
     const professor = await Professor.findById(id);
     if (!professor) {
       throw new Error("Professor não encontrado");
@@ -66,6 +75,7 @@ const editarProfessor = async (req, res) => {
       let professorAtualizado = await Professor.findByIdAndUpdate(id, {
         nome,
         idade,
+        email,
         disciplinas: disciplinasIds,
       });
       res.status(201).json({
@@ -81,7 +91,36 @@ const editarProfessor = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {};
+const login = async (req, res) => {
+  try {
+    const professorResult = await Professor.findOne({ email: req.body.email });
+    if (!professorResult) {
+      throw new Error("Credenciais invalidas");
+    } else {
+      const { __v, _id, ...professor } = professorResult.toObject();
+      if (!professor) throw new Error("Credenciais invalidas");
+      const senhaIsValid = await bcrypt.compare(
+        req.body.senha,
+        professor.senha
+      );
+      if (!senhaIsValid) throw new Error("Credenciais invalidas");
+      const token = jwtService.sign(professor, process.env.SECRET, {
+        expiresIn: "1h",
+      });
+
+      res.status(200).json({
+        message: "Login realizado com sucesso!",
+        token: token,
+        professor: professor,
+      });
+    }
+  } catch (e) {
+    res.status(401).json({
+      message: "Erro ao realizar login",
+      error: e.message,
+    });
+  }
+};
 module.exports = {
   criarProfessor,
   obterTodosProfessores,
