@@ -68,13 +68,17 @@ npm run dev
 
 ## 📡 Endpoints Principais
 
-### Rotas sem autenticação (Para alunos)
+### Rotas
 | Método | Endpoint         | Descrição                       | Exemplo de Body                     |
 |--------|------------------|---------------------------------|-------------------------------------|
 | POST   | /api/aluno       | Registra novo aluno             | `{ "nome": "um nome", "idade":19 }` |
 | GET    | /api/aluno       | Lista todos os usuários criados | `não é necessário`                  |
 | PUT    | /api/aluno/:id   | Edita um aluno específico       | `{ "nome": "um nome", "idade":19 }` |
 | DELETE | /api/aluno/:id   | Deleta um aluno específico      | `não é necessário`                  |
+| POST   | /api/disciplina  | Registra nova disciplina             | `{ "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "05-21-2025", "tarefasIds": ["id das tarefas dessa disciplina"] }` |
+| GET    | /api/disciplina  | Lista todos as disciplinas criadas | `não é necessário`                  |-
+| PUT    | /api/disciplina/:id| Edita uma disciplina específica       | `{  "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "05-21-2025", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
+| DELETE | /api/disciplina/:id| Deleta uma disciplina específica      | `não é necessário`                  |
 
 
 
