@@ -57,6 +57,8 @@ cp .env.example .env
 ### Configuração do Ambiente (.env)
 ```env
 PORT=3000
+ROUNDS=(numero entre 10 e 13)
+SECRET=suasecret
 ```
 
 ### Executando a API
