@@ -88,10 +88,10 @@ npm run dev
 ### Rotas Professores
 | Método | Endpoint         | Descrição                       | Exemplo de Body                     |
 |--------|------------------|---------------------------------|-------------------------------------|
-| POST   | /api/professor  | Registra novo professor             | `{  "nome": "uma nome", "idade": idade, "senha": "umasenha", "tarefasIds": ["id das tarefas dessa disciplina"]}`|
+| POST   | /api/professor  | Registra novo professor             | `{  "nome": "uma nome", "idade": 25, "senha": "umasenha", "tarefasIds": ["id das tarefas dessa disciplina"]}`|
 | GET    | /api/professor  | Lista todos os professores criados | `não é necessário`                  |-
 | POST   | /api/professor/login  | Faz login do professor e gera token | `{"email": "email@email.com", "senha": "umasenha"}`                  |-
-| PUT    | /api/professor/:id| Edita um professor específico       | `{  "nome": "uma nome", "idade": idade, "senha": "umasenha", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
+| PUT    | /api/professor/:id| Edita um professor específico       | `{  "nome": "uma nome", "idade": 25, "senha": "umasenha", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
 | DELETE | /api/professor/:id| Deleta um professor específico      | `não é necessário`                  |
 ### Rotas Tarefas
 | Método | Endpoint         | Descrição                       | Exemplo de Body                     |
