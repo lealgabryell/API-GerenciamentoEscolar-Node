@@ -81,6 +81,11 @@ npm run dev
 | GET    | /api/disciplina  | Lista todos as disciplinas criadas | `não é necessário`                  |-
 | PUT    | /api/disciplina/:id| Edita uma disciplina específica       | `{  "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "mm-dd-aa", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
 | DELETE | /api/disciplina/:id| Deleta uma disciplina específica      | `não é necessário`                  |
+| POST   | /api/professor  | Registra novo professor             | `{ "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "mm-dd-aa", "tarefasIds": ["id das tarefas dessa disciplina"] }` |
+| GET    | /api/professor  | Lista todos os professores criados | `não é necessário`                  |-
+| POST    | /api/professor/login  | Faz login do professor e gera token | `{"email": "email@email.com", "senha": "umasenha}`                  |-
+| PUT    | /api/professor/:id| Edita um professor específico       | `{  "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "mm-dd-aa", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
+| DELETE | /api/professor/:id| Deleta um professor específico      | `não é necessário`                  |
 
 
 
