@@ -34,6 +34,7 @@ Me encontre no **LinkedIn:**<br>
 | Dotenv          | Gerenciamento de variáveis de ambiente |
 | Bcrypt          | Criptografia de senhas              |
 | JSON Web Token  | Autenticação stateless              |
+| UUIDv4          | Criação de id perosnalizado para matrículas |
 
 ## 🚀 Começando
 
@@ -99,6 +100,20 @@ npm run dev
 | GET    | /api/tarefa       | Lista todas as tarefa criadas | `não é necessário`                  |
 | PUT    | /api/tarefa/:id   | Edita uma tarefa específica       | `{ "titulo": "um titulo", "alunoId":"id de um aluno", "disciplinasId": ["id de uma disciplina", "id de outra disciplina se necessário"] }` |
 | DELETE | /api/tarefa/:id   | Deleta uma tarefa específica      | `não é necessário`                  |
+### Rotas Turmas
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
+| POST   | /api/turma       | Registra nova turma             | `{ "nome": "um titulo", "alunosIds":["id de um aluno", "id de outro aluno"], "professorId": "id de um professor" }` |
+| GET    | /api/turma       | Lista todas as turma criadas | `não é necessário`                  |
+| PUT    | /api/turma/:id   | Edita uma turma específica       | `{ "nome": "um titulo", "alunosIds":["id de um aluno", "id de outro aluno"], "professorId": "id de um professor" }` |
+| DELETE | /api/turma/:id   | Deleta uma turma específica      | `não é necessário`                  |
+### Rotas Perfil
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
+| POST   | /api/perfil       | Registra novo perfil             | `{ "telefone": "um telefone", "endereco":"um endereço", "alunoId": "id de um aluno" }` |
+| GET    | /api/perfil       | Lista todos os perfil criados | `não é necessário`                  |
+| PUT    | /api/perfil/:id   | Edita um perfil específico       | `{ "telefone": "um telefone", "endereco":"um endereço", "alunoId": "id de um aluno" }` |
+| DELETE | /api/perfil/:id   | Deleta uma perfil específico      | `não é necessário`                  |
 
 
 
