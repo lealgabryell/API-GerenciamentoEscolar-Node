@@ -34,7 +34,7 @@ Me encontre no **LinkedIn:**<br>
 | Dotenv          | Gerenciamento de variáveis de ambiente |
 | Bcrypt          | Criptografia de senhas              |
 | JSON Web Token  | Autenticação stateless              |
-| UUIDv4          | Criação de id perosnalizado para matrículas |
+| UUIDv4          | Criação de id personalizados para matrículas |
 
 ## 🚀 Começando
 
