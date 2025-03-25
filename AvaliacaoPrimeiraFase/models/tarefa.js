@@ -4,9 +4,9 @@ const Aluno = require("../models/aluno.js");
 let tarefaSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
   concluida: Boolean,
-  aluno: {
+  turma: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: Aluno,
+    ref: "Turma",
   },
   disciplinas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Disciplina" }],
 });

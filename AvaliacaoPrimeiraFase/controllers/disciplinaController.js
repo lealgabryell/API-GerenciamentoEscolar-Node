@@ -83,6 +83,10 @@ module.exports = {
           dataFim,
           tarefas: tarefasIds,
         });
+        await Tarefa.updateMany(
+          { _id: { $in: tarefasIds } },
+          { $push: { disciplinas: novaDisciplina._id } }
+        );
         res.status(201).json({
           message: "Disciplina atualizada com sucesso!",
           atualizacao: disciplinaAtualizada,

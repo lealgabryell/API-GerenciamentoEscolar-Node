@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
   ) {
     return next();
   } else if (!token) {
-    res.status(401).json({ message: "Token não informado" });
+    return res.status(401).json({ message: "Token não informado" });
   } else {
     token = token.split(" ")[1];
   }
@@ -28,6 +28,6 @@ module.exports = (req, res, next) => {
       return next();
     }
   } catch (e) {
-    res.status(401).json({ message: e.message, content: e });
+    return res.status(401).json({ message: e.message, content: e });
   }
 };

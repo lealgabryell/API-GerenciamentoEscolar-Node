@@ -2,13 +2,14 @@ const Turma = require("../models/turma");
 
 const criarTurma = async (req, res) => {
   try {
-    const { nome, alunosIds, professorId } = req.body;
+    const { nome, turno, alunosIds, professorId } = req.body;
 
-    if (!nome || !alunosIds || alunosIds.length === 0 || !professorId) {
+    if (!nome || !turno || !alunosIds || alunosIds.length === 0 || !professorId) {
       throw new Error("Campos obrigatórios não preenchidos");
     } else {
       const novaTurma = new Turma({
         nome,
+        turno,
         alunos: alunosIds,
         professor: professorId,
       });
@@ -27,7 +28,7 @@ const criarTurma = async (req, res) => {
 
 const obterTodasTurmas = async (req, res) => {
   try {
-    const turmas = await Turma.find().populate("alunos professor");
+    const turmas = await Turma.find().populate("professor");
     if (turmas.length === 0) {
       throw new Error("Nenhuma turma encontrada");
     } else {
@@ -59,15 +60,16 @@ const deletarTurma = async (req, res) => {
 const editarTurma = async (req, res) => {
   try {
     const id = req.params.id;
-    const { nome, alunosIds, professorId } = req.body;
+    const { nome, turno, alunosIds, professorId } = req.body;
     const turma = await Turma.findById(id);
-    if (!id || !nome || !alunosIds || alunosIds.length === 0 || !professorId) {
+    if (!id || !turno || !nome || !alunosIds || alunosIds.length === 0 || !professorId) {
       throw new Error("Parametros obrigatórios não preenchidos");
     } else if (!turma) {
       throw new Error("Turma não encontrada");
     } else {
       let turmaAtualizada = await Turma.findByIdAndUpdate(id, {
         nome,
+        turno,
         alunos: alunosIds,
         professor: professorId,
       });

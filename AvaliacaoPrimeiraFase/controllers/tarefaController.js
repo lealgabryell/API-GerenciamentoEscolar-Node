@@ -2,15 +2,15 @@ const Tarefa = require("../models/tarefa");
 
 const criarTarefa = async (req, res) => {
   try {
-    const { titulo, alunoId, disciplinasIds } = req.body;
-    if (!titulo || !alunoId || !disciplinasIds || disciplinasIds.length === 0) {
+    const { titulo, turmaId, disciplinasIds } = req.body;
+    if (!titulo || !turmaId || !disciplinasIds || disciplinasIds.length === 0) {
       throw new Error("Campos obrigatórios não preenchidos");
     } else {
       const concluida = false;
 
       const novaTarefa = new Tarefa({
         titulo,
-        aluno: alunoId,
+        turma: turmaId,
         concluida,
         disciplinas: disciplinasIds,
       });
@@ -30,25 +30,17 @@ const criarTarefa = async (req, res) => {
 const obterTodasTarefas = async (req, res) => {
   try {
     const tarefas = await Tarefa.find()
-      .populate("aluno")
+      .populate("turma")
       .populate("disciplinas");
-    if (tarefas.length === 0) {
-      throw new Error("Nenhuma tarefa encontrada");
-    } else {
-      res.status(200).json(tarefas);
-    }
+    res.status(200).json(tarefas);
   } catch (e) {
-    if (e.message == "Nenhuma tarefa encontrada") {
-      res.status(200).json({ message: e.message });
-    } else {
-      res.status(500).json({ message: "Erro ao obter tarefa" });
-    }
+    res.status(500).json({ message: "Erro ao obter tarefa" });
   }
 };
 
 const deletarTarefa = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     if (!id) {
       throw new Error("Nenhum Id informado");
     } else {

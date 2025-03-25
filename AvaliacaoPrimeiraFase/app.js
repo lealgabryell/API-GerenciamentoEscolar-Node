@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require('cors');
 const authMiddleware = require("./authMiddleware");
 const alunoRoutes = require("./routes/alunoRoutes");
 const disciplinaRoutes = require("./routes/disciplinaRoutes");
@@ -9,6 +10,7 @@ const turmaRoutes = require("./routes/turmaRoutes");
 const app = express();
 require("dotenv").config();
 const db = require("./database/db");
+app.use(cors());
 app.use(express.json());
 app.use(authMiddleware);
 app.use("/api", alunoRoutes);

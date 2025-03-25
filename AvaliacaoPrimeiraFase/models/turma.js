@@ -2,7 +2,8 @@ let mongoose = require("mongoose");
 
 let turmaSchema = new mongoose.Schema({
   nome: { type: String, required: true },
-  alunos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Aluno" }],
+  turno: { type: String, required: true },
+  tarefas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tarefa" }],
   professor: { type: mongoose.Schema.Types.ObjectId, ref: "Professor" }
 });
 
