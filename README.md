@@ -34,6 +34,7 @@ Me encontre no **LinkedIn:**<br>
 | Dotenv          | Gerenciamento de variáveis de ambiente |
 | Bcrypt          | Criptografia de senhas              |
 | JSON Web Token  | Autenticação stateless              |
+| UUIDv4          | Criação de id personalizados para matrículas |
 
 ## 🚀 Começando
 
@@ -70,17 +71,49 @@ npm run dev
 
 ## 📡 Endpoints Principais
 
-### Rotas
+### Rotas Alunos
 | Método | Endpoint         | Descrição                       | Exemplo de Body                     |
 |--------|------------------|---------------------------------|-------------------------------------|
 | POST   | /api/aluno       | Registra novo aluno             | `{ "nome": "um nome", "idade":19 }` |
 | GET    | /api/aluno       | Lista todos os usuários criados | `não é necessário`                  |
 | PUT    | /api/aluno/:id   | Edita um aluno específico       | `{ "nome": "um nome", "idade":19 }` |
 | DELETE | /api/aluno/:id   | Deleta um aluno específico      | `não é necessário`                  |
+### Rotas Disciplinas
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
 | POST   | /api/disciplina  | Registra nova disciplina             | `{ "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "mm-dd-aa", "tarefasIds": ["id das tarefas dessa disciplina"] }` |
 | GET    | /api/disciplina  | Lista todos as disciplinas criadas | `não é necessário`                  |-
 | PUT    | /api/disciplina/:id| Edita uma disciplina específica       | `{  "nome": "uma disciplina", "descricao": "descricao da disciplina", "dataFim": "mm-dd-aa", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
 | DELETE | /api/disciplina/:id| Deleta uma disciplina específica      | `não é necessário`                  |
+### Rotas Professores
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
+| POST   | /api/professor  | Registra novo professor             | `{  "nome": "uma nome", "idade": 25, "senha": "umasenha", "tarefasIds": ["id das tarefas dessa disciplina"]}`|
+| GET    | /api/professor  | Lista todos os professores criados | `não é necessário`                  |-
+| POST   | /api/professor/login  | Faz login do professor e gera token | `{"email": "email@email.com", "senha": "umasenha"}`                  |-
+| PUT    | /api/professor/:id| Edita um professor específico       | `{  "nome": "uma nome", "idade": 25, "senha": "umasenha", "tarefasIds": ["id das tarefas dessa disciplina"]}` |
+| DELETE | /api/professor/:id| Deleta um professor específico      | `não é necessário`                  |
+### Rotas Tarefas
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
+| POST   | /api/tarefa       | Registra nova tarefa             | `{ "titulo": "um titulo", "alunoId":"id de um aluno", "disciplinasId": ["id de uma disciplina", "id de outra disciplina se necessário"] }` |
+| GET    | /api/tarefa       | Lista todas as tarefa criadas | `não é necessário`                  |
+| PUT    | /api/tarefa/:id   | Edita uma tarefa específica       | `{ "titulo": "um titulo", "alunoId":"id de um aluno", "disciplinasId": ["id de uma disciplina", "id de outra disciplina se necessário"] }` |
+| DELETE | /api/tarefa/:id   | Deleta uma tarefa específica      | `não é necessário`                  |
+### Rotas Turmas
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
+| POST   | /api/turma       | Registra nova turma             | `{ "nome": "um titulo", "alunosIds":["id de um aluno", "id de outro aluno"], "professorId": "id de um professor" }` |
+| GET    | /api/turma       | Lista todas as turma criadas | `não é necessário`                  |
+| PUT    | /api/turma/:id   | Edita uma turma específica       | `{ "nome": "um titulo", "alunosIds":["id de um aluno", "id de outro aluno"], "professorId": "id de um professor" }` |
+| DELETE | /api/turma/:id   | Deleta uma turma específica      | `não é necessário`                  |
+### Rotas Perfil
+| Método | Endpoint         | Descrição                       | Exemplo de Body                     |
+|--------|------------------|---------------------------------|-------------------------------------|
+| POST   | /api/perfil       | Registra novo perfil             | `{ "telefone": "um telefone", "endereco":"um endereço", "alunoId": "id de um aluno" }` |
+| GET    | /api/perfil       | Lista todos os perfil criados | `não é necessário`                  |
+| PUT    | /api/perfil/:id   | Edita um perfil específico       | `{ "telefone": "um telefone", "endereco":"um endereço", "alunoId": "id de um aluno" }` |
+| DELETE | /api/perfil/:id   | Deleta uma perfil específico      | `não é necessário`                  |
 
 
 
