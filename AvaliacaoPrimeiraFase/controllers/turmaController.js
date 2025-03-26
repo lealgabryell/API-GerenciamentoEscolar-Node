@@ -40,10 +40,24 @@ const obterTodasTurmas = async (req, res) => {
       .json({ message: "Erro ao buscar turmas", error: e.message });
   }
 };
-
+const obterTurmaPorId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const turma = await Turma.findById(id);
+    if (!id) {
+      throw new Error("Id inválido!")
+    } else if (!turma) {
+      throw new Error("Esse id não se refere a nenhuma turma")
+    } else {
+      res.status(200).json({ turma: turma })
+    }
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}
 const deletarTurma = async (req, res) => {
   try {
-    const { id } = req.params.id;
+    const id = req.params.id;
     if (!id) {
       throw new Error("Nenhum Id informado");
     } else {
@@ -85,4 +99,4 @@ const editarTurma = async (req, res) => {
   }
 };
 
-module.exports = { criarTurma, obterTodasTurmas, deletarTurma, editarTurma };
+module.exports = { criarTurma, obterTodasTurmas, deletarTurma, editarTurma, obterTurmaPorId };

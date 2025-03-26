@@ -105,7 +105,7 @@ const login = async (req, res) => {
       );
       if (!senhaIsValid) throw new Error("Credenciais invalidas");
       const token = jwtService.sign(professor, process.env.SECRET, {
-        expiresIn: "1h",
+        expiresIn: "5h",
       });
 
       res.status(200).json({

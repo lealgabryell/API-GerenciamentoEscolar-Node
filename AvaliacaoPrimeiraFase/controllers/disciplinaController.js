@@ -37,11 +37,7 @@ module.exports = {
   obterTodasDisciplinas: async (req, res) => {
     try {
       const disciplinas = await Disciplina.find().populate("tarefas").populate("tarefas.turmas");
-      if (disciplinas.length === 0) {
-        throw new Error("Nenhuma disciplina encontrada");
-      } else {
-        res.status(200).json(disciplinas);
-      }
+      res.status(200).json(disciplinas);
     } catch (e) {
       res.status(404).json({
         message: "Erro ao buscar disciplinas",
