@@ -40,6 +40,7 @@ const obterTodasTarefas = async (req, res) => {
   try {
     const tarefas = await Tarefa.find()
       .populate("disciplinas")
+      .populate("turmas")
     res.status(200).json(tarefas);
   } catch (e) {
     res.status(500).json({ message: "Erro ao obter tarefa" });
