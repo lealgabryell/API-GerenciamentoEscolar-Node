@@ -1,13 +1,12 @@
 let mongoose = require("mongoose");
-const Aluno = require("../models/aluno.js");
 
 let tarefaSchema = new mongoose.Schema({
   titulo: { type: String, required: true },
   concluida: Boolean,
-  turma: {
+  turmas: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Turma",
-  },
+  }],
   disciplinas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Disciplina" }],
 });
 

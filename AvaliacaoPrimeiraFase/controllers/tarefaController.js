@@ -1,23 +1,28 @@
 const Tarefa = require("../models/tarefa");
 const Disciplina = require("../models/disciplina");
+const Turma = require("../models/turma");
 
 const criarTarefa = async (req, res) => {
   try {
-    const { titulo, turmaId, disciplinasIds } = req.body;
-    if (!titulo || !turmaId || !disciplinasIds || disciplinasIds.length === 0) {
+    const { titulo, turmasIds, disciplinasIds } = req.body;
+    if (!titulo || !turmasIds || !disciplinasIds || disciplinasIds.length === 0) {
       throw new Error("Campos obrigatórios não preenchidos");
     } else {
       const concluida = false;
 
       const novaTarefa = new Tarefa({
         titulo,
-        turma: turmaId,
+        turmas: turmasIds,
         concluida,
         disciplinas: disciplinasIds,
       });
       await Disciplina.updateMany(
         { _id: { $in: disciplinasIds } },
-        { $push: { tarefas: novaTerafa._id } }
+        { $push: { tarefas: novaTarefa._id } }
+      );
+      await Turma.updateMany(
+        { _id: { $in: turmasIds } },
+        { $push: { tarefas: novaTarefa._id } }
       );
       await novaTarefa.save();
 
@@ -34,8 +39,7 @@ const criarTarefa = async (req, res) => {
 const obterTodasTarefas = async (req, res) => {
   try {
     const tarefas = await Tarefa.find()
-      .populate("turma")
-      .populate("disciplinas");
+      .populate("disciplinas")
     res.status(200).json(tarefas);
   } catch (e) {
     res.status(500).json({ message: "Erro ao obter tarefa" });
