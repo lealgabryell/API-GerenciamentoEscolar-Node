@@ -1,4 +1,5 @@
 const Tarefa = require("../models/tarefa");
+const Disciplina = require("../models/disciplina");
 
 const criarTarefa = async (req, res) => {
   try {
@@ -14,7 +15,10 @@ const criarTarefa = async (req, res) => {
         concluida,
         disciplinas: disciplinasIds,
       });
-
+      await Disciplina.updateMany(
+        { _id: { $in: disciplinasIds } },
+        { $push: { tarefas: novaTerafa._id } }
+      );
       await novaTarefa.save();
 
       res.status(201).json({
