@@ -72,9 +72,9 @@ const deletarTarefa = async (req, res) => {
 const editarTarefa = async (req, res) => {
   try {
     const id = req.params.id;
-    const { titulo, concluida } = req.body;
+    const { titulo, concluida, turmasIds, disciplinasIds } = req.body;
     const tarefa = await Tarefa.findById(id);
-    if (!id || !titulo || !concluida) {
+    if (!id || !titulo || !concluida || !turmasIds || !disciplinasIds) {
       throw new Error("Campos obrigatórios não preenchidos");
     } else if (!tarefa) {
       throw new Error("Tarefa não encontrada");
@@ -82,6 +82,8 @@ const editarTarefa = async (req, res) => {
       let tarefaAtualizada = await Tarefa.findByIdAndUpdate(id, {
         titulo,
         concluida,
+        turmas: turmasIds,
+        disciplinas: disciplinasIds
       });
       res.status(201).json({
         message: "Tarefa atualizada com sucesso!",
@@ -93,9 +95,28 @@ const editarTarefa = async (req, res) => {
   }
 };
 
+const obterTarefaPorId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const tarefa = await Tarefa.findById(id)
+      .populate("disciplinas")
+      .populate("turmas")
+    if (!id) {
+      throw new Error("Id inválido!");
+    } else if (!tarefa) {
+      throw new Error("Tarefa não encontrada");
+    } else {
+      res.status(200).json(tarefa)
+    }
+  } catch (err) {
+    res.status(400).json({ message: err.message })
+  }
+}
+
 module.exports = {
   criarTarefa,
   obterTodasTarefas,
   deletarTarefa,
   editarTarefa,
+  obterTarefaPorId
 };
