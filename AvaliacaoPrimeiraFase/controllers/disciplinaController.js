@@ -54,6 +54,11 @@ module.exports = {
         throw new Error("Disciplina não encontrada");
       } else {
         await Disciplina.deleteOne({ _id: id });
+        // Atualiza as tarefas associadas à disciplina
+        await Tarefa.updateMany(
+          { _id: { $in: tarefasIds } },
+          { $push: { disciplinas: novaDisciplina._id } }
+        );
         res.status(201).json({ message: "Disciplina removida com sucesso!" });
       }
     } catch (e) {
@@ -72,6 +77,10 @@ module.exports = {
       if (!disciplina) {
         throw new Error("Disciplina não encontrada");
       } else {
+        await Tarefa.updateMany(
+          { _id: { $in: tarefasIds } },
+          { $push: { disciplinas: novaDisciplina._id } }
+        );
         let disciplinaAtualizada = await Disciplina.findByIdAndUpdate(id, {
           nome,
           descricao,
@@ -79,10 +88,6 @@ module.exports = {
           dataFim,
           tarefas: tarefasIds,
         });
-        await Tarefa.updateMany(
-          { _id: { $in: tarefasIds } },
-          { $push: { disciplinas: novaDisciplina._id } }
-        );
         res.status(201).json({
           message: "Disciplina atualizada com sucesso!",
           atualizacao: disciplinaAtualizada,

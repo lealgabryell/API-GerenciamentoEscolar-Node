@@ -53,6 +53,14 @@ const deletarTarefa = async (req, res) => {
     if (!id) {
       throw new Error("Nenhum Id informado");
     } else {
+      await Disciplina.updateMany(
+        { _id: { $in: disciplinasIds } },
+        { $push: { tarefas: novaTarefa._id } }
+      );
+      await Turma.updateMany(
+        { _id: { $in: turmasIds } },
+        { $push: { tarefas: novaTarefa._id } }
+      );
       await Tarefa.deleteOne({ _id: id });
       res.status(201).json({ message: "Tarefa removida com sucesso!" });
     }

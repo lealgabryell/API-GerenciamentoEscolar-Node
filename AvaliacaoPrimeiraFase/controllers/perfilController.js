@@ -61,6 +61,10 @@ module.exports = {
         throw new Error("Perfil não encontrado");
       } else {
         await Perfil.deleteOne({ _id: id });
+        await Aluno.updateOne(
+          { _id: alunoId },
+          { $set: { perfil: novoPerfil._id } }
+        );
         res.status(201).json({ message: "Perfil removido com sucesso!" });
       }
     } catch (e) {
