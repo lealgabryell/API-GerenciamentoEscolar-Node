@@ -54,16 +54,28 @@ module.exports = {
         throw new Error("Disciplina não encontrada");
       } else {
         await Disciplina.deleteOne({ _id: id });
-        // Atualiza as tarefas associadas à disciplina
-        await Tarefa.updateMany(
-          { _id: { $in: tarefasIds } },
-          { $push: { disciplinas: novaDisciplina._id } }
-        );
         res.status(201).json({ message: "Disciplina removida com sucesso!" });
       }
     } catch (e) {
       res.status(404).json({
         message: "Erro ao deletar disciplina",
+        error: e.message,
+      });
+    }
+  },
+
+  obterDiscplinaPorID: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const disciplina = await Disciplina.findById(id).populate("tarefas");
+      if (!disciplina) {
+        throw new Error("Disciplina não encontrada");
+      } else {
+        res.status(200).json(disciplina);
+      }
+    } catch (e) {
+      res.status(404).json({
+        message: "Erro ao buscar disciplina",
         error: e.message,
       });
     }
@@ -77,10 +89,6 @@ module.exports = {
       if (!disciplina) {
         throw new Error("Disciplina não encontrada");
       } else {
-        await Tarefa.updateMany(
-          { _id: { $in: tarefasIds } },
-          { $push: { disciplinas: novaDisciplina._id } }
-        );
         let disciplinaAtualizada = await Disciplina.findByIdAndUpdate(id, {
           nome,
           descricao,

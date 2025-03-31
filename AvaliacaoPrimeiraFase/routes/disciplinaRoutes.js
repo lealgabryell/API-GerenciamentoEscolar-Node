@@ -3,6 +3,7 @@ const router = express.Router();
 const disciplinaController = require("../controllers/disciplinaController.js");
 
 router.get("/disciplina", disciplinaController.obterTodasDisciplinas);
+router.get("/disciplina/:id", disciplinaController.obterDiscplinaPorID);
 router.post("/disciplina", disciplinaController.criarDisciplina);
 router.delete("/disciplina/:id", disciplinaController.deletarDisciplina);
 router.put("/disciplina/:id", disciplinaController.editarDisciplina);
