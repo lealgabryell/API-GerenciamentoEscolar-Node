@@ -1,18 +1,18 @@
-const Professor = require("../models/Professor");
+const Professor = require("../models/professor");
+const Turma = require("../models/turma");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
 const jwtService = require("jsonwebtoken");
 
 const criarProfessor = async (req, res) => {
   try {
-    const { nome, idade, email, senha, disciplinasIds } = req.body;
+    const { nome, idade, email, senha } = req.body;
 
     const novoProfessor = new Professor({
       nome,
       idade,
       email,
-      senha,
-      disciplinas: disciplinasIds,
+      senha
     });
 
     novoProfessor.senha = await bcrypt.hash(
@@ -67,7 +67,7 @@ const deletarProfessor = async (req, res) => {
 const editarProfessor = async (req, res) => {
   try {
     const id = req.params.id;
-    const { nome, idade, email, disciplinasIds } = req.body;
+    const { nome, idade, email, disciplinasIds, turmasIds } = req.body;
     const professor = await Professor.findById(id);
     if (!professor) {
       throw new Error("Professor não encontrado");
@@ -77,10 +77,15 @@ const editarProfessor = async (req, res) => {
         idade,
         email,
         disciplinas: disciplinasIds,
+        turmas: turmasIds,
       });
+      await Turma.updateMany(
+        { _id: { $in: turmasIds } },
+        { $push: { professor: professorAtualizado._id } }
+      );
       res.status(201).json({
         message: "Professor atualizado com sucesso!",
-        professor,
+        professorAtualizado,
       });
     }
   } catch (e) {
@@ -90,7 +95,22 @@ const editarProfessor = async (req, res) => {
     });
   }
 };
-
+const obterProfessorPorId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const professor = await Professor.findById(id).populate("disciplinas").populate("turmas");
+    if (!professor) {
+      throw new Error("Professor não encontrado");
+    } else {
+      res.status(200).json(professor);
+    }
+  } catch (e) {
+    res.status(404).json({
+      message: "Erro ao buscar professor",
+      error: e.message,
+    });
+  }
+};
 const login = async (req, res) => {
   try {
     const professorResult = await Professor.findOne({ email: req.body.email });
@@ -124,6 +144,7 @@ const login = async (req, res) => {
 module.exports = {
   criarProfessor,
   obterTodosProfessores,
+  obterProfessorPorId,
   deletarProfessor,
   editarProfessor,
   login,

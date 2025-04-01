@@ -6,6 +6,7 @@ router.get("/professor", professorController.obterTodosProfessores);
 router.post("/professor", professorController.criarProfessor);
 router.post("/professor/login", professorController.login);
 router.delete("/professor/:id", professorController.deletarProfessor);
+router.get("/professor/:id", professorController.obterProfessorPorId);
 router.put("/professor/:id", professorController.editarProfessor);
 
 module.exports = router;
