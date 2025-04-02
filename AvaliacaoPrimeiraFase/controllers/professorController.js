@@ -78,10 +78,17 @@ const editarProfessor = async (req, res) => {
         email,
         disciplinas: disciplinasIds,
         turmas: turmasIds,
-      });
+      }, { new: true, runValidators: true });
+      //remove turmas antigas se necessario
+      await Turma.updateMany(
+        { _id: { $nin: turmasIds } },
+        { $push: [{ professor: id }] }
+      );
+      //adiciona as novas turmas
       await Turma.updateMany(
         { _id: { $in: turmasIds } },
-        { $push: { professor: professorAtualizado._id } }
+        {$push: [{ professor: id }]},
+        { $addToSet: [{ professor: id }] } // Evita duplicação
       );
       res.status(201).json({
         message: "Professor atualizado com sucesso!",
@@ -98,7 +105,7 @@ const editarProfessor = async (req, res) => {
 const obterProfessorPorId = async (req, res) => {
   try {
     const id = req.params.id;
-    const professor = await Professor.findById(id).populate("disciplinas").populate("turmas");
+    const professor = await Professor.findById(id);
     if (!professor) {
       throw new Error("Professor não encontrado");
     } else {
