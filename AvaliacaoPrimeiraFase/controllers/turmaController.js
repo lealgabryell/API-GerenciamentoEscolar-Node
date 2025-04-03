@@ -2,7 +2,7 @@ const Turma = require("../models/turma");
 
 const criarTurma = async (req, res) => {
   try {
-    const { nome, turno, alunosIds, professorId } = req.body;
+    const { nome, turno, alunosIds, tarefasIds, professorId } = req.body;
 
     if (!nome || !turno || !alunosIds || alunosIds.length === 0 || !professorId) {
       throw new Error("Campos obrigatórios não preenchidos");
@@ -11,6 +11,7 @@ const criarTurma = async (req, res) => {
         nome,
         turno,
         alunos: alunosIds,
+        tarefas: tarefasIds,
         professor: professorId,
       });
 
