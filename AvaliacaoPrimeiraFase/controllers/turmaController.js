@@ -1,3 +1,4 @@
+const Professor = require("../models/professor");
 const Turma = require("../models/turma");
 
 const criarTurma = async (req, res) => {
@@ -14,9 +15,20 @@ const criarTurma = async (req, res) => {
         tarefas: tarefasIds,
         professor: professorId,
       });
-
       await novaTurma.save();
+      console.log("novaTurma", novaTurma._id);
 
+
+      const professorAtualizado = await Professor.findOneAndUpdate(
+        { _id: professorId },
+        { $set: { turma: novaTurma._id } },
+        { new: true }
+      );
+
+      console.log("Professor atualizado:", professorAtualizado);
+
+
+      
       res.status(201).json({
         message: "Turma criada com sucesso!",
         turma: novaTurma,
@@ -44,7 +56,7 @@ const obterTodasTurmas = async (req, res) => {
 const obterTurmaPorId = async (req, res) => {
   try {
     const id = req.params.id;
-    const turma = await Turma.findById(id);
+    const turma = await Turma.findById(id).populate("professor");
     if (!id) {
       throw new Error("Id inválido!")
     } else if (!turma) {
@@ -62,7 +74,12 @@ const deletarTurma = async (req, res) => {
     if (!id) {
       throw new Error("Nenhum Id informado");
     } else {
+
       await Turma.deleteOne({ _id: id });
+      await Professor.updateMany(
+        { _id: { $nin: professor } },
+        { $push: [{ professor: id }] }
+      );
       res.status(201).json({ message: "Turma removida com sucesso!" });
     }
   } catch (e) {

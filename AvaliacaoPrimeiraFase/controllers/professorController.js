@@ -53,7 +53,10 @@ const obterTodosProfessores = async (req, res) => {
 const deletarProfessor = async (req, res) => {
   try {
     const { id } = req.params.id;
-
+    await Turma.updateMany(
+      { _id: { $nin: turmasIds } },
+      { $push: [{ professor: id }] }
+    );
     await Professor.deleteOne({ _id: id });
     res.status(201).json({ message: "Professor removido com sucesso!" });
   } catch (e) {
